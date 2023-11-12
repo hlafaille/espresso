@@ -2,7 +2,7 @@ package xyz.hlafaille.espresso.configuration;
 
 
 /**
- * ConfigurationParser deals with parsing the `conf.espresso.toml` file
+ * ConfigurationParser deals with parsing the `espresso.json` file
  *
  * @version 1.0.0
  * @author hlafaille
