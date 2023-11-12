@@ -9,4 +9,6 @@ a few reasons for this.
     * In Espresso, this will have a sensible default option that can be configured, shall the user want it. With the
       single-build-file using Java as its language, it will allow for rich code completion, which
       Gradle does not have (in my experience with the Kotlin and Groovy DSLs).
-2.  
+2.  Simplicity is invaluable
+    * Espresso will remain daemon-less, instead opting for filesystem caches for determining which files should be 
+      recompiled.

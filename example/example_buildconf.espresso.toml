@@ -1,0 +1,39 @@
+# Espresso Build Configuration File v1.0.0
+# This file details everything about your Espresso project, with all configuration options available to you at any
+# point.
+#
+# This file is an EXAMPLE of what is POSSIBLE with Espresso. <3 buildWithEspresso
+
+
+# Espresso Project Details
+# Basic details about your project
+[details]
+name = "seizuretracker"
+version = 1.0
+author = "https://github.com/hlafaille"
+group_id = "xyz.hlafaille.seizuretracker"
+artifact_id = "seizuretracker"
+
+
+# Project Dependencies
+# in this block, the key is the `groupId` and the and the value is the `artifactId:versionNumber`. With the key:value
+# array style of dependency declaration, you can reduce the amount of lines you have
+[dependencies]
+org.springframework.boot = ["spring-boot-starter-test:3.1.5", "spring-boot-starter-jdbc"]
+
+
+# Build Stage - Pre-build
+[stage.pre_build.compile_typescript]
+command.tsc = "tsc"
+command.tsc.entrypoint = true
+command.tsc.if_fails = "exit_fatal"
+
+
+# Build Stage - Build (Protected)
+[stage.build]
+javac.path = "/usr/bin/javac"
+
+
+# Build Stage - Archive
+[stage.pre_archive]
+command = "echo Pre-archive stage"

@@ -1,0 +1,44 @@
+# Espresso Build Configuration File v1.0.0
+# This file details everything about your Espresso project, with all configuration options available to you at any
+# point. Espresso
+#
+
+
+# Espresso Project Details
+# Basic details about your project
+[details]
+name = "Espresso project"
+version = 1.0
+author = "https://github.com/hlafaille"
+group_id = "xyz.hlafaille.espresso"
+
+
+# Project Dependencies
+# in this block, the key is the `groupId` and the and the value is the `artifactId:versionNumber`. With the key:value
+# array style of dependency declaration, you can reduce the amount of lines you have
+[dependencies]
+org.springframework.boot = ["spring-boot-starter-test:3.1.5", "spring-boot-starter-jdbc"]
+
+
+# Build Stage - Pre-build
+# This stage is run before any `.jar` files are compiled. You can create your own prebuild stages by creating a new
+# block such as [stage.prebuild.compile_typescript] or [stage.prebuild.obfuscate].
+[stage.pre_build]
+command.entrypoint = "echo Pre-build stage" # <- all keys starting with "command" will run a command in the shell
+command.entrypoint.entrypoint = true        # <- a command can have an optional depends key, establishing control flow
+command.entrypoint.if_fails = "exit_fatal"  # <- define per command what happens if the command exits with non-zero
+
+
+# Build Stage - Build
+# This stage is run after all prebuild stages are complete. The build stage will compile all `.java` source files into
+# `.class` files. This stage is protected, and it does not allow for any `command.` keys.
+[stage.build]
+javac.path = "/usr/bin/javac"
+
+
+# Build Stage - Archive
+# This stage is run after the build stage is complete and assembles all compiled `.class` files into a `.jar` file,
+# which is executable by the JVM. You can create your own pre-archive stages by creaeting a new block such as
+# [stage.pre_archive.cleanup].
+[stage.pre_archive]
+command = "echo Pre-archive stage"
