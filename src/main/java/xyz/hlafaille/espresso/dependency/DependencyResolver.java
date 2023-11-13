@@ -15,6 +15,10 @@ import java.util.logging.Logger;
 public class DependencyResolver {
     private final Logger logger = Logger.getLogger(Main.class.getName());
 
+    private String getEspressoJarsPathFromSeperatedFormat(String artifactName, String artifactVersion) {
+        return ".espresso/jars/" + getJarNameFromSeperatedFormat(artifactName, artifactVersion);
+    }
+
     private String getJarNameFromSeperatedFormat(String artifactName, String artifactVersion) {
         return "%s-%s.jar".formatted(artifactName, artifactVersion);
     }
@@ -44,7 +48,7 @@ public class DependencyResolver {
         URL dependencyUrl = getDependencyUrlFromSeperatedFormat(groupId, artifactName, artifactVersion);
         FileUtils.copyURLToFile(
                 dependencyUrl,
-                new File(getJarNameFromSeperatedFormat(artifactName, artifactVersion)),
+                new File(getEspressoJarsPathFromSeperatedFormat(artifactName, artifactVersion)),
                 5000,
                 5000
         );
