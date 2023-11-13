@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 public class EspressoProjectConfiguration {
     private Details details;
-    private Map<String, Dependency> dependencies;
+    private Map<String, Group> dependencies;
     private String[] repositories;
 
     @Data
@@ -22,7 +22,7 @@ public class EspressoProjectConfiguration {
     }
 
     @Data
-    public static class Dependency {
+    public static class Group {
         private List<Artifact> artifacts;
     }
 
