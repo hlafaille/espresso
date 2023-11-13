@@ -12,6 +12,14 @@
           "version": "2.8.9"
         }
       ]
+    },
+    "junit": {
+      "artifacts": [
+        {
+          "artifactId": "junit",
+          "version": "4.13.2"
+        }
+      ]
     }
   }
 }
