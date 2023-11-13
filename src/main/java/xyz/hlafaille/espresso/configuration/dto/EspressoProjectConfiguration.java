@@ -12,6 +12,7 @@ import java.util.Map;
 public class EspressoProjectConfiguration {
     private Details details;
     private Map<String, Dependency> dependencies;
+    private String[] repositories;
 
     @Data
     public static class Details {

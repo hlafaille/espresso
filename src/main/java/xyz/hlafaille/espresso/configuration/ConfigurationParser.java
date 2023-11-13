@@ -28,6 +28,6 @@ public class ConfigurationParser {
         Gson gson = new Gson();
         BufferedReader reader = new BufferedReader(new FileReader(Constants.ESPRESSO_CONFIG_PATH));
         espressoProjectConfiguration = gson.fromJson(reader, EspressoProjectConfiguration.class);
-        logger.info("configuration loaded, %s dependencies");
+        logger.info("configuration loaded, %s dependencies".formatted(espressoProjectConfiguration.getDependencies().size()));
     }
 }
