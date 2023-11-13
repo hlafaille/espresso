@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * Deals with the .espresso directory. In a nutshell, this class handles initializing and maintaining the project
  * directory.
  */
-public class ProjectHandler {
+public class ProjectStructureHandler {
     private final File espressoDirectory = new File(".espresso");
     private final File espressoJarsDirectory = new File(".espresso/jars");
     private final File espressoConfig = new File(".espresso/espresso.json5");

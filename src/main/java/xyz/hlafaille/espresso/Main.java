@@ -1,7 +1,7 @@
 package xyz.hlafaille.espresso;
 
 import xyz.hlafaille.espresso.configuration.ConfigurationParser;
-import xyz.hlafaille.espresso.configuration.ProjectHandler;
+import xyz.hlafaille.espresso.configuration.ProjectStructureHandler;
 import xyz.hlafaille.espresso.configuration.dto.EspressoProjectConfiguration;
 import xyz.hlafaille.espresso.dependency.DependencyResolver;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
@@ -23,11 +23,11 @@ public class Main {
         Logger logger = Logger.getLogger(Main.class.getName());
 
         // create our project handler, this will ensure the .espresso dir exists
-        ProjectHandler projectHandler = new ProjectHandler();
+        ProjectStructureHandler projectStructureHandler = new ProjectStructureHandler();
 
         // ensure the project integrity (.espresso should exist)
         try {
-            projectHandler.createEspressoProject();
+            projectStructureHandler.createEspressoProject();
         } catch (EspressoProjectIntegrityCompromisedException e) {
             logger.info("espresso project already exists, continuing");
         }
