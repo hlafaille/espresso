@@ -3,9 +3,7 @@ package xyz.hlafaille.espresso.dependency;
 import org.apache.commons.io.FileUtils;
 import xyz.hlafaille.espresso.Main;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,6 +15,24 @@ import java.util.logging.Logger;
 public class DependencyResolver {
     private final Logger logger = Logger.getLogger(Main.class.getName());
 
+    private String getJarNameFromSeperatedFormat(String artifactName, String artifactVersion) {
+        return "%s-%s.jar".formatted(artifactName, artifactVersion);
+    }
+
+    /**
+     * Create a standard HTTPS URL from the seperated format we use internally
+     *
+     * @param groupId         Maven style Group ID (ex: com.google.code.gson)
+     * @param artifactName    Maven style artifact name (ex: gson)
+     * @param artifactVersion Maven style artifact version (ex: 1.0.0)
+     * @return URL object
+     */
+    private URL getDependencyUrlFromSeperatedFormat(String groupId, String artifactName, String artifactVersion) throws MalformedURLException {
+        String baseUrl = "https://repo1.maven.org/maven2/";
+        groupId = groupId.replace(".", "/");
+        return new URL(baseUrl + groupId + "/" + artifactName + "/" + artifactVersion + "/" + getJarNameFromSeperatedFormat(artifactName, artifactVersion));
+    }
+
     /**
      * Reach out to repo1.maven.org/maven2 and fetch the specified dependency.
      *
@@ -25,16 +41,13 @@ public class DependencyResolver {
      * @param artifactVersion Maven style artifact version (ex: 1.0.0)
      */
     public void resolveDependency(String groupId, String artifactName, String artifactVersion) throws IOException {
-        logger.info("resolving gid:%s || a:%s || v:%s".formatted(groupId, artifactName, artifactVersion));
-
-        // todo assemble the url
-        URL dependencyUrl = new URL("https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar");
-
+        URL dependencyUrl = getDependencyUrlFromSeperatedFormat(groupId, artifactName, artifactVersion);
         FileUtils.copyURLToFile(
                 dependencyUrl,
-                new File("gson.jar"),
+                new File(getJarNameFromSeperatedFormat(artifactName, artifactVersion)),
                 5000,
                 5000
         );
+        logger.info("resolved -> gid:%s | a:%s | v:%s".formatted(groupId, artifactName, artifactVersion));
     }
 }
