@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  */
 public class ProjectHandler {
     private final File espressoDirectory = new File(".espresso");
+    private final File espressoJarsDirectory = new File(".espresso/jars");
     private final File espressoConfig = new File(".espresso/espresso.json5");
     private final Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -30,6 +31,9 @@ public class ProjectHandler {
         if (!doesProjectDirectoryExist()) {
             throw new EspressoProjectIntegrityCompromisedException(".espresso directory does not exist, is this a valid Espresso project?");
         }
+        if (!espressoJarsDirectory.exists()) {
+            throw new EspressoProjectIntegrityCompromisedException(".espresso/jars directory does not exist, is this a valid Espresso project?");
+        }
     }
 
     /**
@@ -38,11 +42,14 @@ public class ProjectHandler {
     public void createEspressoProject() throws EspressoProjectIntegrityCompromisedException, IOException {
         // ensure we're not overwriting an existing project
         if (doesProjectDirectoryExist()) {
-            throw new EspressoProjectIntegrityCompromisedException(".espresso directory already exists");
+            throw new EspressoProjectIntegrityCompromisedException(".espresso directory already exists, this might already be an Espresso project!");
         }
 
-        // create the directory and espresso.json5 file
+        // create the directories
         espressoDirectory.mkdirs();
+        espressoJarsDirectory.mkdirs();
+
+        // create our config file
         espressoConfig.createNewFile();
 
         // read the base config from resources
