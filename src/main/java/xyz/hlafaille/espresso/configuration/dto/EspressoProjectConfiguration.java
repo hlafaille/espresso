@@ -1,5 +1,6 @@
 package xyz.hlafaille.espresso.configuration.dto;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.util.List;
@@ -13,6 +14,14 @@ public class EspressoProjectConfiguration {
     private Details details;
     private Map<String, Group> dependencies;
     private String[] repositories;
+
+    @SerializedName("java")
+    private JavaDetails javaDetails;
+
+    @Data
+    public static class JavaDetails {
+        private String jdkPath;
+    }
 
     @Data
     public static class Details {

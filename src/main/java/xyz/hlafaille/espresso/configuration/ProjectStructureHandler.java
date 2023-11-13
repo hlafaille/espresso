@@ -91,6 +91,7 @@ public class ProjectStructureHandler {
         List<Path> result;
         try (Stream<Path> walk = Files.walk(Path.of(new URI("file:///" + System.getProperty("user.dir") + "/test/src/main/java")))) {
             result = walk.filter(Files::isRegularFile)
+                    .filter(path -> path.toString().endsWith(".java"))
                     .collect(Collectors.toList());
         }
         return result;

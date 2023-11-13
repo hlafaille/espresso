@@ -10,6 +10,9 @@ Please install the JSON schema for this file to get code completion!
     "author": "@hlafaille on GitHub",
     "version": "1.0.0"
   },
+  "java": {
+    "jdkPath": "/usr/bin/javac"
+  },
   "dependencies": {
     "com.google.code.gson": {
       "artifacts": [
