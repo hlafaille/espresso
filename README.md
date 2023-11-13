@@ -1,6 +1,9 @@
 # Espresso
 A light weight, opinionated build tool for Java. Because Gradle and Maven don't have opinions.
 
+# Todo
+
+
 # Planned Commands
 Currently, Espresso does not have a command line interface. I am building out classes that handle functionality first.
 * `espresso init`

@@ -1,5 +1,6 @@
 package xyz.hlafaille.espresso;
 
+import xyz.hlafaille.espresso.build.BuildHandler;
 import xyz.hlafaille.espresso.configuration.ConfigurationParser;
 import xyz.hlafaille.espresso.configuration.ProjectStructureHandler;
 import xyz.hlafaille.espresso.configuration.dto.EspressoProjectConfiguration;
@@ -7,6 +8,7 @@ import xyz.hlafaille.espresso.dependency.DependencyResolver;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.util.LogFormatter;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.io.IOException;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.logging.Logger;
  * will allow this project to come together using building block style development.
  */
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         LogFormatter.configureLogger();
         Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -57,5 +59,11 @@ public class Main {
                 );
             }
         }
+
+        // run the build handler
+        BuildHandler buildHandler = new BuildHandler();
+        String javaCompilerCommand = buildHandler.buildJavaCompilerCommand();
+        Runtime runtime = Runtime.getRuntime();
+        Process process = runtime.exec(javaCompilerCommand);
     }
 }
