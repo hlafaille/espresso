@@ -7,7 +7,7 @@ Please install the JSON schema for this file to get code completion!
 {
   "details": {
     "name": "Espresso Project",
-    "author": "hlafaille@proton.me",
+    "author": "@myOssPlatformUsername",
     "version": "1.0.0"
   },
   "dependencies": {

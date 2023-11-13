@@ -15,13 +15,15 @@ public class Main {
     public static void main(String[] args) throws IOException, EspressoProjectIntegrityCompromisedException {
         LogFormatter.configureLogger();
 
-        // create our modules (these will be mapped together to form CLI commands later)
+        // create our project handler, this will ensure the .espresso dir exists
         ProjectHandler projectHandler = new ProjectHandler();
-        ConfigurationParser configurationParser = new ConfigurationParser();
-        DependencyResolver dependencyResolver = new DependencyResolver();
 
         // ensure the project integrity (.espresso should exist)
-        projectHandler.ensureProjectIntegrity();
+        projectHandler.createEspressoProject();
+
+        // create the rest of our modules
+        ConfigurationParser configurationParser = new ConfigurationParser();
+        DependencyResolver dependencyResolver = new DependencyResolver();
 
         // filter out our dependencies
         EspressoProjectConfiguration projectConfiguration = configurationParser.getEspressoProjectConfiguration();
