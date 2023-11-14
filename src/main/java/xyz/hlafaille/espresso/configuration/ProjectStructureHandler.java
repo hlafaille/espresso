@@ -55,40 +55,6 @@ public class ProjectStructureHandler {
     }
 
     /**
-     * Establish a new Espresso project
-     */
-    public void createEspressoProject() throws EspressoProjectIntegrityCompromisedException, IOException {
-        // ensure we're not overwriting an existing project
-        if (doesProjectDirectoryExist()) {
-            throw new EspressoProjectIntegrityCompromisedException(".espresso directory already exists, this might already be an Espresso project!");
-        }
-
-        // create the directories
-        espressoDirectory.mkdirs();
-        espressoJarsDirectory.mkdirs();
-
-        // create our config file
-        espressoConfig.createNewFile();
-
-        // read the base config from resources
-        File baseConfigFile = new File(getClass().getClassLoader().getResource("base.espresso.json5").getFile());
-        Scanner baseConfigReader = new Scanner(baseConfigFile);
-        baseConfigReader.close();
-
-        // build our string
-        StringBuilder data = new StringBuilder();
-        while (baseConfigReader.hasNextLine()) {
-            data.append(baseConfigReader.nextLine()).append("\n");
-        }
-
-        // write the string
-        FileWriter writer = new FileWriter(espressoConfig);
-        writer.write(data.toString());
-        writer.close();
-        logger.info("new espresso project created, let's get programming");
-    }
-
-    /**
      * Get a File pointing towards the main package. The main package is where the main class file should be located.
      * @return File object
      */
