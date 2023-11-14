@@ -103,19 +103,32 @@ public class BuildHandler {
         logger.info("compilation complete");
     }
 
-    /**
-     * Automatically handles creating the custom manifest, telling jar what libs we have
-     */
-    public void createManifest() {
 
+    /**
+     * Writes a manifest file to the `bin` directory
+     */
+    public void createManifest() throws IOException {
+        // get our main class
+        String mainClass = configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClassPackagePath();
+
+        // create the manifest
+        File manifest = new File(".espresso/build/manifest.mf");
+        manifest.delete();
+        manifest.createNewFile();
+        try (FileWriter manifestWriter = new FileWriter(manifest)) {
+            manifestWriter.append("Manifest-Version: 1.0\n");
+            manifestWriter.append("Main-Class: " + mainClass);
+        }
+        logger.info("manifest created with `%s` as main class".formatted(mainClass));
     }
+
     /**
      * Creates the .jar file. A .jar is effectively a .zip file.
      */
-    public void createJarFromBinDirectory() throws InterruptedException, IOException {
+    public void createFatJarFromBuildDirectory() throws InterruptedException, IOException {
         // run the command
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("jar", "cfe", ".espresso/build/artifact.jar", configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClassPackagePath(), "-C", "build/", ".");
+        processBuilder.command("jar", "cfe", ".espresso/build/artifact.jar", configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClassPackagePath(), "-C", ".espresso/build/", ".");
         processBuilder.directory(new File(System.getProperty("user.dir")));
         Process process = processBuilder.start();
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
