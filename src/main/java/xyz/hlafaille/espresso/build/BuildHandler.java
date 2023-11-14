@@ -1,6 +1,5 @@
 package xyz.hlafaille.espresso.build;
 
-import org.apache.commons.io.FileUtils;
 import xyz.hlafaille.espresso.Main;
 import xyz.hlafaille.espresso.configuration.ConfigurationParser;
 import xyz.hlafaille.espresso.configuration.ProjectStructureHandler;

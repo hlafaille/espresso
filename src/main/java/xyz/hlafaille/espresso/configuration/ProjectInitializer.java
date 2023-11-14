@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ProjectInitializer {
 
@@ -72,11 +71,9 @@ public class ProjectInitializer {
      * directory.
      *
      * @param mainClassPath The path pointing to the main class (ex: xyz.hlafaille.espresso.Main)
-     * @return ProjectManager pointed towards the new project
      */
-    public static ProjectManager initializeProject(String mainClassPath) throws EspressoProjectIntegrityCompromisedException, IOException {
+    public static void initializeProject(String mainClassPath) throws EspressoProjectIntegrityCompromisedException, IOException {
         // pre-requisites
-        final String currentWorkingDirectory = System.getProperty("user.dir");
         final File espressoDirectory = new File(".espresso");
         final File espressoConfiguration = new File(espressoDirectory + "/espresso.json5");
         final File espressoLibsDirectory = new File(espressoDirectory + "/libs");
@@ -108,8 +105,11 @@ public class ProjectInitializer {
 
         // convert this DTO to json
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String espressoConfigurationString = gson.toJson(espressoConfiguration);
+        String espressoConfigurationJsonString = gson.toJson(espressoConfiguration);
 
-        return null;
+        // write the file
+        try (FileWriter fileWriter = new FileWriter(espressoConfiguration)) {
+            fileWriter.write(espressoConfigurationJsonString);
+        }
     }
 }
