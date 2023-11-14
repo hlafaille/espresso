@@ -104,6 +104,12 @@ public class BuildHandler {
     }
 
     /**
+     * Automatically handles creating the custom manifest, telling jar what libs we have
+     */
+    public void createManifest() {
+
+    }
+    /**
      * Creates the .jar file. A .jar is effectively a .zip file.
      */
     public void createJarFromBinDirectory() throws InterruptedException, IOException {
