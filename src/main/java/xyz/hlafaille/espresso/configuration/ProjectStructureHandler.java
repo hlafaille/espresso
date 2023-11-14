@@ -96,4 +96,19 @@ public class ProjectStructureHandler {
         }
         return result;
     }
+
+    /**
+     * Get a list of .jar files in .espresso/jars
+     *
+     * @return List of Path objects
+     */
+    public List<Path> getJarLibraryFiles() throws URISyntaxException, IOException {
+        List<Path> result;
+        try (Stream<Path> walk = Files.walk(Path.of(new URI("file:///" + System.getProperty("user.dir") + "/.espresso/jars")))) {
+            result = walk.filter(Files::isRegularFile)
+                    .filter(path -> path.toString().endsWith(".jar"))
+                    .collect(Collectors.toList());
+        }
+        return result;
+    }
 }

@@ -1,5 +1,6 @@
 package xyz.hlafaille.espresso.build;
 
+import org.apache.commons.io.FileUtils;
 import xyz.hlafaille.espresso.Main;
 import xyz.hlafaille.espresso.configuration.ConfigurationParser;
 import xyz.hlafaille.espresso.configuration.ProjectStructureHandler;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Handles building and packaging the project into a nice, neat .jar file (with a manifest!)
@@ -66,7 +68,7 @@ public class BuildHandler {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
         String line;
         while ((line = reader.readLine()) != null) {
-            logger.info("javac out ->   %s".formatted(line));
+            logger.info("javac ->   %s".formatted(line));
         }
         int exitCode = process.waitFor();
 
@@ -81,6 +83,9 @@ public class BuildHandler {
      * Writes a manifest file to the `bin` directory
      */
     public void createManifest() throws IOException {
+        // get our main class
+        String mainClass = configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClass();
+
         // create the manifest directory
         File manifestDirectory = new File("bin/META-INF");
         manifestDirectory.mkdirs();
@@ -90,9 +95,54 @@ public class BuildHandler {
         manifest.delete();
         manifest.createNewFile();
         try (FileWriter manifestWriter = new FileWriter(manifest)) {
-            manifestWriter.append("Manifest-Version: 1.0");
-            manifestWriter.append("Main-CLass: xyz.hlafaille.project.Main");
+            manifestWriter.append("Manifest-Version: 1.0\n");
+            manifestWriter.append("Main-Class: " + mainClass);
             // todo add lib directory to bin:
         }
+        logger.info("manifest created with `%s` as main class".formatted(mainClass));
+    }
+
+
+    /**
+     * Copies the dependencies from .espresso/jars into bin/libs
+     */
+    public void copyDependenciesToBinDirectory() throws URISyntaxException, IOException {
+        // create the directory
+        File libsDirectory = new File("bin/libs");
+        libsDirectory.mkdirs();
+
+        // get all the libs
+        List<Path> jarPaths = projectStructureHandler.getJarLibraryFiles();
+
+        // iterate over each jar lib, copy it
+        File newJarFile;
+        for (Path jar : jarPaths) {
+            logger.info("copying lib '%s'".formatted(jar.getFileName()));
+            newJarFile = new File(libsDirectory.toString() + "/" + jar.getFileName());
+            FileUtils.copyFile(jar.toFile(), newJarFile);
+        }
+    }
+
+    /**
+     * Creates the .jar file. A .jar is effectively a .zip file.
+     */
+    public void createJarFromBinDirectory() throws IOException {
+        // calculate what our source package is
+        String[] splitSourcePackage = configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClass().split("\\.");
+        StringBuilder sourcePackageStringBuilder = new StringBuilder();
+        for (int i = 0; i < splitSourcePackage.length - 1; i++) {
+            sourcePackageStringBuilder.append(splitSourcePackage[i]).append("/");
+        }
+        sourcePackageStringBuilder.insert(0, System.getProperty("user.dir") + "/bin/");
+
+        // establish our directories
+        File libsDirectory = new File("bin/libs");
+        File metaInfDirectory = new File("bin/META-INF");
+        File srcPackage = new File(sourcePackageStringBuilder.toString());
+        List<File> jarFiles = List.of(libsDirectory, metaInfDirectory, srcPackage);
+
+        // build the zip
+
+
     }
 }

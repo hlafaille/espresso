@@ -61,8 +61,11 @@ public class Main {
             }
         }
 
-        // run the build handler and compile
+        // run the build handler. do compile, manifest and libs
         BuildHandler buildHandler = new BuildHandler();
         buildHandler.compile();
+        buildHandler.createManifest();
+        buildHandler.copyDependenciesToBinDirectory();
+        buildHandler.createJarFromBinDirectory();
     }
 }

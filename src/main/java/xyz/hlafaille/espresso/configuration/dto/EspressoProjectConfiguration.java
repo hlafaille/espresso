@@ -21,6 +21,7 @@ public class EspressoProjectConfiguration {
     @Data
     public static class JavaDetails {
         private String jdkPath;
+        private String mainClass;
     }
 
     @Data
