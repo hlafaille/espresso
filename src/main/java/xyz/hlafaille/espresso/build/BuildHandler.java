@@ -103,32 +103,60 @@ public class BuildHandler {
     }
 
     /**
-     * Automatically handles creating the custom manifest, telling jar what libs we have
+     * Writes a manifest file to the `bin` directory
      */
-    public void createManifest() {
+    public void createManifest() throws IOException {
+        // get our main class
+        String mainClass = configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClass();
 
+        // create the manifest directory
+        File manifestDirectory = new File("bin/META-INF");
+        manifestDirectory.mkdirs();
+
+        // create the manifest
+        File manifest = new File("bin/META-INF/MANIFEST.MF");
+        manifest.delete();
+        manifest.createNewFile();
+        try (FileWriter manifestWriter = new FileWriter(manifest)) {
+            manifestWriter.append("Manifest-Version: 1.0\n");
+            manifestWriter.append("Main-Class: " + mainClass);
+            // todo add lib directory to bin:
+        }
+        logger.info("manifest created with `%s` as main class".formatted(mainClass));
     }
+
+    /**
+     * Copies the dependencies from .espresso/jars into bin/libs
+     */
+    public void copyDependenciesToBinDirectory() throws URISyntaxException, IOException {
+        // create the directory
+        File libsDirectory = new File("bin/libs");
+        libsDirectory.mkdirs();
+
+        // get all the libs
+        List<Path> jarPaths = projectStructureHandler.getJarLibraryFiles();
+
+        // iterate over each jar lib, copy it
+        File newJarFile;
+        for (Path jar : jarPaths) {
+            logger.info("copying lib '%s'".formatted(jar.getFileName()));
+            newJarFile = new File(libsDirectory.toString() + "/" + jar.getFileName());
+            FileUtils.copyFile(jar.toFile(), newJarFile);
+        }
+    }
+
     /**
      * Creates the .jar file. A .jar is effectively a .zip file.
      */
-    public void createJarFromBinDirectory() throws InterruptedException, IOException {
-        // run the command
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("jar", "cfe", ".espresso/build/artifact.jar", configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClassPackagePath(), "-C", "build/", ".");
-        processBuilder.directory(new File(System.getProperty("user.dir")));
-        Process process = processBuilder.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            logger.info("javac ->   %s".formatted(line));
-        }
-        int exitCode = process.waitFor();
+    public void createJarFromBinDirectory() throws IOException {
+        // establish our directories
+        File libsDirectory = new File("bin/libs");
+        File metaInfDirectory = new File("bin/META-INF");
+        File srcPackage = new File(projectStructureHandler.getMainPackage().toString() + "/src");
+        List<File> jarFiles = List.of(libsDirectory, metaInfDirectory, srcPackage);
 
-        // handle our exit code
-        if (!(exitCode == 0)) {
-            // todo add custom exception
-            throw new RuntimeException(String.valueOf(exitCode));
-        }
-        logger.info("artifact jar packaged");
+        // build the zip
+
+
     }
 }
