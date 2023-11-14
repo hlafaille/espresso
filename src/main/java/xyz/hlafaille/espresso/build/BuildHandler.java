@@ -51,7 +51,7 @@ public class BuildHandler {
         // build our java compiler command
         List<String> javaCompilerCommand = new ArrayList<String>();
         javaCompilerCommand.add("%s".formatted(configurationParser.getEspressoProjectConfiguration().getJavaDetails().getCompilerPath()));
-        javaCompilerCommand.add("-verbose");
+        // javaCompilerCommand.add("-verbose");
         javaCompilerCommand.add("-Werror");
         javaCompilerCommand.add("-d");
         javaCompilerCommand.add(".espresso/build");
@@ -82,7 +82,6 @@ public class BuildHandler {
     public void compile() throws IOException, InterruptedException, EspressoProjectCompilationFailedException, URISyntaxException {
         // get the java compiler command
         String[] javaCompilerCommand = getJavaCompilerCommand();
-        logger.info("running javac: `%s`".formatted(Arrays.toString(javaCompilerCommand)));
 
         // run the command
         ProcessBuilder processBuilder = new ProcessBuilder();
