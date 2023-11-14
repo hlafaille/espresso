@@ -4,8 +4,10 @@ import xyz.hlafaille.espresso.Main;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.module.Configuration;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -22,9 +24,13 @@ import java.util.stream.Stream;
  */
 public class ProjectStructureHandler {
     private final File espressoDirectory = new File(".espresso");
+    private final ConfigurationParser configurationParser = new ConfigurationParser();
     private final File espressoJarsDirectory = new File(".espresso/jars");
     private final File espressoConfig = new File(".espresso/espresso.json5");
     private final Logger logger = Logger.getLogger(Main.class.getName());
+
+    public ProjectStructureHandler() throws FileNotFoundException {
+    }
 
     /**
      * Checks if the Project Directory exists
@@ -83,13 +89,26 @@ public class ProjectStructureHandler {
     }
 
     /**
+     * Get a File pointing towards the main package. The main package is where the main class file should be located.
+     * @return File object
+     */
+    public File getMainPackage() {
+        String[] splitSourcePackage = configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClassPackagePath().split("\\.");
+        StringBuilder sourcePackageStringBuilder = new StringBuilder();
+        for (int i = 0; i < splitSourcePackage.length - 1; i++) {
+            sourcePackageStringBuilder.append(splitSourcePackage[i]).append("/");
+        }
+        return new File(sourcePackageStringBuilder.toString());
+    }
+
+    /**
      * Get source .java files
      *
      * @return List of Path objects
      */
     public List<Path> getSourceFiles() throws URISyntaxException, IOException {
         List<Path> result;
-        try (Stream<Path> walk = Files.walk(Path.of(new URI("file:///" + System.getProperty("user.dir") + "/test/src/main/java")))) {
+        try (Stream<Path> walk = Files.walk(Path.of(new URI("file:///" + System.getProperty("user.dir") + "/src/main/java/" + getMainPackage())))) {
             result = walk.filter(Files::isRegularFile)
                     .filter(path -> path.toString().endsWith(".java"))
                     .collect(Collectors.toList());

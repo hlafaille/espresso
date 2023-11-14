@@ -41,5 +41,6 @@ public class EspressoProjectConfiguration {
     public static class Artifact {
         private String artifactId;
         private String version;
+        private boolean annotationProcessor;
     }
 }

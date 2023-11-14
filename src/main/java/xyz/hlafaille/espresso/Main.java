@@ -9,9 +9,9 @@ import xyz.hlafaille.espresso.exception.EspressoProjectCompilationFailedExceptio
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.util.LogFormatter;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -64,8 +64,6 @@ public class Main {
         // run the build handler. do compile, manifest and libs
         BuildHandler buildHandler = new BuildHandler();
         buildHandler.compile();
-        // buildHandler.createManifest();
-        // buildHandler.copyDependenciesToBinDirectory();
         buildHandler.createJarFromBinDirectory();
     }
 }

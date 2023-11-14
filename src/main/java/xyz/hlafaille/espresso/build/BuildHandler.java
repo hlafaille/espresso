@@ -1,8 +1,10 @@
 package xyz.hlafaille.espresso.build;
 
+import org.apache.commons.io.FileUtils;
 import xyz.hlafaille.espresso.Main;
 import xyz.hlafaille.espresso.configuration.ConfigurationParser;
 import xyz.hlafaille.espresso.configuration.ProjectStructureHandler;
+import xyz.hlafaille.espresso.configuration.dto.EspressoProjectConfiguration;
 import xyz.hlafaille.espresso.exception.EspressoProjectCompilationFailedException;
 
 import java.io.*;
@@ -11,6 +13,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -33,6 +36,18 @@ public class BuildHandler {
         // convert source paths into array of strings
         List<Path> sourcePaths = projectStructureHandler.getSourceFiles();
 
+        // determine which jars need to be passed in as annotation processors
+        List<String> annotationProcessorJarNames = new ArrayList<String>();
+        Map<String, EspressoProjectConfiguration.Group> dependencies = configurationParser.getEspressoProjectConfiguration().getDependencies();
+        for (String groupId : dependencies.keySet()) {
+            EspressoProjectConfiguration.Group group = dependencies.get(groupId);
+            for (EspressoProjectConfiguration.Artifact artifact : group.getArtifacts()) {
+                if (artifact.isAnnotationProcessor()) {
+                    annotationProcessorJarNames.add("%s-%s.jar".formatted(artifact.getArtifactId(), artifact.getVersion()));
+                }
+            }
+        }
+
         // build our java compiler command
         List<String> javaCompilerCommand = new ArrayList<String>();
         javaCompilerCommand.add("%s".formatted(configurationParser.getEspressoProjectConfiguration().getJavaDetails().getCompilerPath()));
@@ -40,8 +55,20 @@ public class BuildHandler {
         javaCompilerCommand.add("-Werror");
         javaCompilerCommand.add("-d");
         javaCompilerCommand.add(".espresso/build");
-        javaCompilerCommand.add("-classpath");
-        javaCompilerCommand.add("\".espresso/jars/*\"");
+
+        // add the dependency jars
+        for (Path dependencyJar : projectStructureHandler.getJarLibraryFiles()) {
+            javaCompilerCommand.add("-classpath");
+            javaCompilerCommand.add(dependencyJar.toAbsolutePath().toString());
+        }
+
+        // add the annotation processor jars
+        for (String annotationProcessorJar : annotationProcessorJarNames) {
+            javaCompilerCommand.add("-processorpath");
+            javaCompilerCommand.add(".espresso/jars/" + annotationProcessorJar);
+        }
+
+        // add the source files
         for (Path path : sourcePaths) {
             javaCompilerCommand.add(path.toString());
         }
@@ -71,7 +98,7 @@ public class BuildHandler {
 
         // handle our exit code
         if (!(exitCode == 0)) {
-            throw new EspressoProjectCompilationFailedException(exitCode);
+            throw new EspressoProjectCompilationFailedException(exitCode, Arrays.toString(javaCompilerCommand));
         }
         logger.info("compilation complete");
     }
@@ -79,15 +106,7 @@ public class BuildHandler {
     /**
      * Creates the .jar file. A .jar is effectively a .zip file.
      */
-    public void createJarFromBinDirectory() throws EspressoProjectCompilationFailedException, InterruptedException, IOException {
-        // calculate what our source package is
-        /* String[] splitSourcePackage = configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClassPackagePath().split("\\.");
-        StringBuilder sourcePackageStringBuilder = new StringBuilder();
-        for (int i = 0; i < splitSourcePackage.length - 1; i++) {
-            sourcePackageStringBuilder.append(splitSourcePackage[i]).append("/");
-        }
-        sourcePackageStringBuilder.insert(0, System.getProperty("user.dir") + "/bin/"); */
-
+    public void createJarFromBinDirectory() throws InterruptedException, IOException {
         // run the command
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("jar", "cfe", ".espresso/build/artifact.jar", configurationParser.getEspressoProjectConfiguration().getJavaDetails().getMainClassPackagePath(), "-C", "build/", ".");
@@ -102,7 +121,8 @@ public class BuildHandler {
 
         // handle our exit code
         if (!(exitCode == 0)) {
-            throw new EspressoProjectCompilationFailedException(exitCode);
+            // todo add custom exception
+            throw new RuntimeException(String.valueOf(exitCode));
         }
         logger.info("artifact jar packaged");
     }
