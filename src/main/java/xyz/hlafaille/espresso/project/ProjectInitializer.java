@@ -1,9 +1,9 @@
-package xyz.hlafaille.espresso.configuration;
+package xyz.hlafaille.espresso.project;
 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import xyz.hlafaille.espresso.configuration.dto.EspressoProjectConfiguration;
+import xyz.hlafaille.espresso.project.dto.EspressoProjectConfiguration;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 
 import java.io.File;
