@@ -20,8 +20,9 @@ public class EspressoProjectConfiguration {
 
     @Data
     public static class JavaDetails {
-        private String jdkPath;
-        private String mainClass;
+        private String compilerPath;
+        private String jarToolPath;
+        private String mainClassPackagePath;
     }
 
     @Data

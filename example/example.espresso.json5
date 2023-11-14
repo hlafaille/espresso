@@ -11,8 +11,9 @@ Please install the JSON schema for this file to get code completion!
     "version": "1.0.0"
   },
   "java": {
-    "jdkPath": "/usr/bin/javac",
-    "mainClassPath": "xyz.hlafaille.project.Main"
+    "compilerPath": "/usr/bin/javac",
+    "jarToolPath": "/usr/bin/jar",
+    "mainClassPackagePath": "xyz.hlafaille.project.Main"
   },
   "dependencies": {
     "com.google.code.gson": {
