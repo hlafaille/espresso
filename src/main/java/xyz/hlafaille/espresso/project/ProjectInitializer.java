@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProjectInitializer {
 
@@ -89,13 +91,16 @@ public class ProjectInitializer {
         espressoConfiguration.createNewFile();
         espressoLibsDirectory.mkdirs();
 
+        // create an empty string/group map (dependencies key won't end up in the json file otherwise)
+        Map<String, EspressoProjectConfiguration.Group> groupMap = new HashMap<>();
+
         // initialize an EspressoProjectConfiguration DTO, that will be converted to JSON by Gson
         EspressoProjectConfiguration espressoProjectConfiguration = new EspressoProjectConfiguration(
                 new EspressoProjectConfiguration.Details(
                         getProjectNameFromMainClassPathString(mainClassPath),
                         getAuthorFromMainClassPathString(mainClassPath),
                         "1.0.0"),
-                null,
+                groupMap,
                 null,
                 new EspressoProjectConfiguration.JavaDetails(
                         "/usr/bin/javac",
@@ -105,7 +110,7 @@ public class ProjectInitializer {
 
         // convert this DTO to json
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String espressoConfigurationJsonString = gson.toJson(espressoConfiguration);
+        String espressoConfigurationJsonString = gson.toJson(espressoProjectConfiguration);
 
         // write the file
         try (FileWriter fileWriter = new FileWriter(espressoConfiguration)) {
