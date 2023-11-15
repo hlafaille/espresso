@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.io.*;
 import java.util.stream.Stream;
@@ -39,6 +38,14 @@ public class ProjectManager {
             instance = new ProjectManager();
         }
         return instance;
+    }
+
+    /**
+     * Reset the state of this singleton. Useful for unit testing. Ideally, you should never need to use this for
+     * user facing functionality.
+     */
+    public void reset() throws IOException {
+        readConfiguration();
     }
 
     /**
@@ -169,7 +176,7 @@ public class ProjectManager {
      */
     public List<File> getDependencies() throws IOException {
         List<File> dependencies = new ArrayList<>();
-        try (Stream<Path> paths = Files.walk(Paths.get(Constants.ESPRESSO_LIBS_DIRECTORY.toURI()))) {
+        try (Stream<Path> paths = Files.walk(Constants.ESPRESSO_LIBS_DIRECTORY.toPath())) {
             paths.filter(Files::isRegularFile).forEach(path -> {
                 dependencies.add(path.toFile());
             });
@@ -189,6 +196,4 @@ public class ProjectManager {
             }
         }
     }
-
-
 }

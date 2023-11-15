@@ -27,6 +27,7 @@ dependencies {
     api("org.projectlombok:lombok:1.18.28")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+    testImplementation("org.mockito:mockito-core:5.7.0")
     annotationProcessor("org.projectlombok:lombok:1.18.28");
     api("com.google.code.gson:gson:2.10.1")
     api("commons-io:commons-io:2.15.0")
