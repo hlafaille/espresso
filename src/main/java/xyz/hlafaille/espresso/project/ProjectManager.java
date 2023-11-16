@@ -44,8 +44,8 @@ public class ProjectManager {
      * Reset the state of this singleton. Useful for unit testing. Ideally, you should never need to use this for
      * user facing functionality.
      */
-    public void reset() throws IOException {
-        readConfiguration();
+    public void reset() throws IOException, EspressoProjectIntegrityCompromisedException {
+        instance = new ProjectManager();
     }
 
     /**
