@@ -2,7 +2,11 @@ package xyz.hlafaille.espresso;
 
 
 import xyz.hlafaille.espresso.cli.ArgumentParser;
+import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
+import xyz.hlafaille.espresso.project.ProjectInitializer;
+import xyz.hlafaille.espresso.project.ProjectManager;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Main {
@@ -23,8 +27,13 @@ public class Main {
                 ),
                 new ArgumentParser.CommandHandler() {
                     @Override
-                    public void execute(Logger logger) {
+                    public void execute(Logger logger, String input) {
                         logger.info("initializing project");
+                        try {
+                            ProjectInitializer.initializeProject(input);
+                        } catch (EspressoProjectIntegrityCompromisedException | IOException e) {
+                            logger.severe(e.getMessage());
+                        }
                     }
                 }
         );

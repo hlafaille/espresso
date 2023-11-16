@@ -28,7 +28,7 @@ public class ArgumentParser {
 
     private final CommandHandler helpCommandHandler = new CommandHandler() {
         @Override
-        public void execute(Logger logger) {
+        public void execute(Logger logger, String input) {
             StringBuilder outputStringBuilder = new StringBuilder(applicationName + " - " + applicationDescription + "\n");
             for (Command command : commandHandlerMap.keySet()) {
                 outputStringBuilder.append("  %s, %s    -   %s\n".formatted(command.shortName, command.name, command.helpText));
@@ -70,20 +70,20 @@ public class ArgumentParser {
 
         // if no command was specified, call the help command handler
         if (args.length == 0) {
-            helpCommandHandler.execute(logger);
+            helpCommandHandler.execute(logger, null);
             return;
         }
 
         // iterate over the commands, find a match for the short or long name and call its command handler
         for (Command command : commandHandlerMap.keySet()) {
             if (args[0].equals(command.name) || args[0].equals(command.shortName)) {
-                commandHandlerMap.get(command).execute(logger);
+                commandHandlerMap.get(command).execute(logger, args[1]);
                 return;
             }
         }
 
         // if a command wasn't found, call the help command handler
-        helpCommandHandler.execute(logger);
+        helpCommandHandler.execute(logger, null);
     }
 
     /**
@@ -102,14 +102,14 @@ public class ArgumentParser {
         String name;
         String shortName;
         String helpText;
-        List<Command> childCommands;
+        Map<Command, CommandHandler> childCommandHandlerMap;
     }
 
     /**
      * Base command handler. This class will encapsulate the logic of a particular command.
      */
     public static class CommandHandler {
-        public void execute(Logger logger) {
+        public void execute(Logger logger, String input) {
         }
     }
 }
