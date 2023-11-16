@@ -2,11 +2,14 @@ package xyz.hlafaille.espresso.cli;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import xyz.hlafaille.espresso.Main;
+import xyz.hlafaille.espresso.util.LogFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * This is a small Argument Parsing and command routing utility
@@ -22,18 +25,22 @@ public class ArgumentParser {
             "Displays this text",
             null
     );
+
     private final CommandHandler helpCommandHandler = new CommandHandler() {
         @Override
-        public String toString() {
+        public void execute(Logger logger) {
             StringBuilder outputStringBuilder = new StringBuilder(applicationName + " - " + applicationDescription + "\n");
             for (Command command : commandHandlerMap.keySet()) {
                 outputStringBuilder.append("  %s, %s    -   %s\n".formatted(command.shortName, command.name, command.helpText));
             }
-            return outputStringBuilder.toString();
+            System.out.println(outputStringBuilder);
         }
     };
 
     public ArgumentParser(String applicationName, String applicationDescription) {
+        // set our log format
+        LogFormatter.configureLogger();
+
         // set the application name and description
         this.applicationName = applicationName;
         this.applicationDescription = applicationDescription;
@@ -58,22 +65,25 @@ public class ArgumentParser {
      * When called, this method will iterate over the Command/CommandHandler map to determine which command needs to ran
      */
     public void parse(String[] args) {
+        // get a logger for this application
+        Logger logger = Logger.getLogger(Main.class.getName());
+
         // if no command was specified, call the help command handler
         if (args.length == 0) {
-            System.out.println(helpCommandHandler);
+            helpCommandHandler.execute(logger);
             return;
         }
 
         // iterate over the commands, find a match for the short or long name and call its command handler
         for (Command command : commandHandlerMap.keySet()) {
             if (args[0].equals(command.name) || args[0].equals(command.shortName)) {
-                System.out.println(commandHandlerMap.get(command));
+                commandHandlerMap.get(command).execute(logger);
                 return;
             }
         }
 
-        // if a command wasn't found, say so and call the help command handler
-        System.out.println(helpCommandHandler);
+        // if a command wasn't found, call the help command handler
+        helpCommandHandler.execute(logger);
     }
 
     /**
@@ -98,10 +108,8 @@ public class ArgumentParser {
     /**
      * Base command handler. This class will encapsulate the logic of a particular command.
      */
-    public class CommandHandler {
-        @Override
-        public String toString() {
-            return null;
+    public static class CommandHandler {
+        public void execute(Logger logger) {
         }
     }
 }
