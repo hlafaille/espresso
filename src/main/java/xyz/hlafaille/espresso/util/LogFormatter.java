@@ -1,12 +1,16 @@
 package xyz.hlafaille.espresso.util;
 
 import xyz.hlafaille.espresso.Main;
+import xyz.hlafaille.espresso.cli.ArgumentParser;
 
 import java.util.logging.*;
 
 public class LogFormatter extends Formatter {
+    private static Logger logger;
+
     /**
      * Override setting our custom bare minimum format
+     *
      * @param logRecord
      * @return
      */
@@ -22,11 +26,18 @@ public class LogFormatter extends Formatter {
      * Configures our logger
      */
     public static void configureLogger() {
-        Logger logger = Logger.getLogger(Main.class.getName());
+        logger = Logger.getLogger(ArgumentParser.class.getName());
         ConsoleHandler consoleHandler = new ConsoleHandler();
         consoleHandler.setFormatter(new LogFormatter());
         logger.setUseParentHandlers(false);
         logger.addHandler(consoleHandler);
         logger.setLevel(Level.ALL);
+    }
+
+    public static Logger getConfiguredLogger() {
+        if (logger == null) {
+            configureLogger();
+        }
+        return logger;
     }
 }

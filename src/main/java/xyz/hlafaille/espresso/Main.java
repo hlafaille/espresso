@@ -22,17 +22,16 @@ public class Main {
                 new ArgumentParser.Command(
                         "initialize",
                         "init",
-                        "Establish a new Espresso project",
-                        null
+                        "Establish a new Espresso project"
                 ),
-                new ArgumentParser.CommandHandler() {
+                new ArgumentParser.CommandHandler(true) {
                     @Override
-                    public void execute(Logger logger, String input) {
-                        logger.info("initializing project");
+                    public void execute(String input) {
+                        getLogger().info("initializing project");
                         try {
                             ProjectInitializer.initializeProject(input);
                         } catch (EspressoProjectIntegrityCompromisedException | IOException e) {
-                            logger.severe(e.getMessage());
+                            getLogger().severe(e.getMessage());
                         }
                     }
                 }

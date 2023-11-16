@@ -22,13 +22,12 @@ public class ArgumentParser {
     private final Command helpCommand = new Command(
             "help",
             "h",
-            "Displays this text",
-            null
+            "Displays this text"
     );
 
-    private final CommandHandler helpCommandHandler = new CommandHandler() {
+    private final CommandHandler helpCommandHandler = new CommandHandler(false) {
         @Override
-        public void execute(Logger logger, String input) {
+        public void execute(String input) {
             StringBuilder outputStringBuilder = new StringBuilder(applicationName + " - " + applicationDescription + "\n");
             for (Command command : commandHandlerMap.keySet()) {
                 outputStringBuilder.append("  %s, %s    -   %s\n".formatted(command.shortName, command.name, command.helpText));
@@ -70,20 +69,24 @@ public class ArgumentParser {
 
         // if no command was specified, call the help command handler
         if (args.length == 0) {
-            helpCommandHandler.execute(logger, null);
+            helpCommandHandler.execute(null);
             return;
         }
 
         // iterate over the commands, find a match for the short or long name and call its command handler
         for (Command command : commandHandlerMap.keySet()) {
             if (args[0].equals(command.name) || args[0].equals(command.shortName)) {
-                commandHandlerMap.get(command).execute(logger, args[1]);
+                String input = null;
+                if (args.length > 2) {
+                    input = args[2];
+                }
+                commandHandlerMap.get(command).execute(input);
                 return;
             }
         }
 
         // if a command wasn't found, call the help command handler
-        helpCommandHandler.execute(logger, null);
+        helpCommandHandler.execute(null);
     }
 
     /**
@@ -102,14 +105,22 @@ public class ArgumentParser {
         String name;
         String shortName;
         String helpText;
-        Map<Command, CommandHandler> childCommandHandlerMap;
+        // Map<Command, CommandHandler> childCommandHandlerMap;
     }
 
     /**
      * Base command handler. This class will encapsulate the logic of a particular command.
      */
     public static class CommandHandler {
-        public void execute(Logger logger, String input) {
+        @Getter
+        private final Logger logger = LogFormatter.getConfiguredLogger();
+        private Boolean requireInput;
+
+        public CommandHandler(Boolean requireInput) {
+            this.requireInput = requireInput;
+        }
+
+        public void execute(String input) {
         }
     }
 }
