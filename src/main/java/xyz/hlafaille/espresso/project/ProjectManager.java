@@ -99,7 +99,7 @@ public class ProjectManager {
 
         // add the group if it doesn't exist
         if (group == null) {
-            group = new EspressoProjectConfiguration.Group();
+            group = new EspressoProjectConfiguration.Group(new ArrayList<EspressoProjectConfiguration.Artifact>());
         }
 
         // add the artifact to the group

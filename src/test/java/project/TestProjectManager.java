@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestProjectManager {
 
-    @Mock
+    @InjectMocks
     private ProjectManager projectManager;
 
     @BeforeEach
