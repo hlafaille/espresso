@@ -55,9 +55,16 @@ tasks {
     }
 }
 
+// ~/.jdks/corretto-17.0.9/bin/jpackage --input ~/EspressoBuild --main-jar espresso.jar --type app-image --name espresso
+task<Exec>("buildJpackageAppImage") {
+    commandLine("rm -rf espresso")
+    commandLine("jpackage", "--input", "~/EspressoBuild", "--main-jar",
+            "espresso.jar", "--type", "app-image", "--name", "espresso"
+    );
+}
 
 
 group = "xyz.hlafaille.espresso"
 version = "1.0-SNAPSHOT"
 description = "buildwithespresso"
-java.sourceCompatibility = JavaVersion.VERSION_21
+java.sourceCompatibility = JavaVersion.VERSION_17

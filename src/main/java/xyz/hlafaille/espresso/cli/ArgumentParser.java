@@ -75,7 +75,7 @@ public class ArgumentParser {
             if (args[0].equals(command.name) || args[0].equals(command.shortName)) {
                 String input = null;
                 if (args.length > 1) {
-                    input = args[2];
+                    input = args[1];
                 }
                 commandHandlerMap.get(command).execute(input);
                 return;

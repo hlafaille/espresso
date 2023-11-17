@@ -74,7 +74,7 @@ public class ProjectInitializer {
      *
      * @param mainClassPath The path pointing to the main class (ex: xyz.hlafaille.espresso.Main)
      */
-    public static void initializeProject(String mainClassPath) throws EspressoProjectIntegrityCompromisedException, IOException {
+    public static String initializeProject(String mainClassPath) throws EspressoProjectIntegrityCompromisedException, IOException {
         // pre-requisites
         final File espressoDirectory = new File(".espresso");
         final File espressoConfiguration = new File(espressoDirectory + "/espresso.json5");
@@ -94,10 +94,12 @@ public class ProjectInitializer {
         // create an empty string/group map (dependencies key won't end up in the json file otherwise)
         Map<String, EspressoProjectConfiguration.Group> groupMap = new HashMap<>();
 
+        String projectName = getProjectNameFromMainClassPathString(mainClassPath);
+
         // initialize an EspressoProjectConfiguration DTO, that will be converted to JSON by Gson
         EspressoProjectConfiguration espressoProjectConfiguration = new EspressoProjectConfiguration(
                 new EspressoProjectConfiguration.Details(
-                        getProjectNameFromMainClassPathString(mainClassPath),
+                        projectName,
                         getAuthorFromMainClassPathString(mainClassPath),
                         "1.0.0"),
                 groupMap,
@@ -116,5 +118,6 @@ public class ProjectInitializer {
         try (FileWriter fileWriter = new FileWriter(espressoConfiguration)) {
             fileWriter.write(espressoConfigurationJsonString);
         }
+        return projectName;
     }
 }

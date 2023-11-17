@@ -32,11 +32,14 @@ public class Main {
                             return;
                         }
                         getLogger().info("initializing project");
+                        String projectName;
                         try {
-                            ProjectInitializer.initializeProject(input);
+                            projectName = ProjectInitializer.initializeProject(input);
                         } catch (EspressoProjectIntegrityCompromisedException | IOException e) {
                             getLogger().severe(e.getMessage());
+                            return;
                         }
+                        getLogger().info("'%s' initialized, happy programming :)".formatted(projectName));
                     }
                 }
         );
