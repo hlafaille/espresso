@@ -2,6 +2,7 @@ package xyz.hlafaille.espresso;
 
 
 import xyz.hlafaille.espresso.cli.ArgumentParser;
+import xyz.hlafaille.espresso.cli.handler.InitCommandHandler;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.project.ProjectInitializer;
 import xyz.hlafaille.espresso.project.ProjectManager;
@@ -24,24 +25,7 @@ public class Main {
                         "init",
                         "Establish a new Espresso project"
                 ),
-                new ArgumentParser.CommandHandler(true) {
-                    @Override
-                    public void execute(String input) {
-                        if (getRequireInput() == true && input == null) {
-                            getLogger().severe("please provide a maven style main class path (ex: com.domain.projectName.Main)");
-                            return;
-                        }
-                        getLogger().info("initializing project");
-                        String projectName;
-                        try {
-                            projectName = ProjectInitializer.initializeProject(input);
-                        } catch (EspressoProjectIntegrityCompromisedException | IOException e) {
-                            getLogger().severe(e.getMessage());
-                            return;
-                        }
-                        getLogger().info("'%s' initialized, happy programming :)".formatted(projectName));
-                    }
-                }
+                new InitCommandHandler()
         );
 
         // parse the arguments
