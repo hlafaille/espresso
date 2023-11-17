@@ -88,12 +88,16 @@ public class ArgumentParser {
                 exitWithCode(1);
             }
 
+            if (args.length == 1) {
+                exitWithCode(executeCommandByName(args[0], null));
+            }
+
             if (args.length >= 2) {
                 exitWithCode(executeCommandByName(args[0], args[1]));
             }
 
         } catch (EspressoCliCommandNotFoundException e) {
-            logger.severe(e.toString());
+            logger.severe(e.getMessage());
             exitWithCode(1);
         }
     }
@@ -106,31 +110,5 @@ public class ArgumentParser {
      */
     public void addCommand(Command command, CommandHandler commandHandler) {
         commandHandlerMap.put(command, commandHandler);
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class Command {
-        String name;
-        String shortName;
-        String helpText;
-    }
-
-    /**
-     * Base command handler. This class will encapsulate the logic of a particular command.
-     */
-    @Getter
-    public static class CommandHandler {
-        private final ArgumentParser argumentParser = ArgumentParser.getInstance();
-        private final ColorLogger logger = ColorLogger.getInstance();
-        private Boolean requireInput;
-
-        public CommandHandler(Boolean requireInput) {
-            this.requireInput = requireInput;
-        }
-
-        public Integer execute(String input) {
-            return null;
-        }
     }
 }

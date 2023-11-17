@@ -1,12 +1,12 @@
 package xyz.hlafaille.espresso.cli.handler;
 
-import xyz.hlafaille.espresso.cli.ArgumentParser;
+import xyz.hlafaille.espresso.cli.CommandHandler;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.project.ProjectInitializer;
 
 import java.io.IOException;
 
-public class InitCommandHandler extends ArgumentParser.CommandHandler {
+public class InitCommandHandler extends CommandHandler {
     public InitCommandHandler() {
         super(true);
     }

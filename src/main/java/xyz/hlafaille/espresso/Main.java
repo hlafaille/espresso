@@ -2,6 +2,7 @@ package xyz.hlafaille.espresso;
 
 
 import xyz.hlafaille.espresso.cli.ArgumentParser;
+import xyz.hlafaille.espresso.cli.Command;
 import xyz.hlafaille.espresso.cli.handler.InitCommandHandler;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.project.ProjectInitializer;
@@ -20,7 +21,7 @@ public class Main {
 
         // add our commands
         argumentParser.addCommand(
-                new ArgumentParser.Command(
+                new Command(
                         "initialize",
                         "init",
                         "Establish a new Espresso project"
