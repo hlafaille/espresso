@@ -63,7 +63,6 @@ task<Exec>("buildJpackageAppImage") {
     );
 }
 
-
 group = "xyz.hlafaille.espresso"
 version = "1.0-SNAPSHOT"
 description = "buildwithespresso"
