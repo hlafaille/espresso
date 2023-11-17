@@ -51,6 +51,7 @@ tasks.test {
 tasks {
     build {
         dependsOn(shadowJar)
+        // ~/.jdks/openjdk-21.0.1/bin/jpackage --input ~/EspressoBuild --main-jar espresso.jar --type app-image --name espresso
     }
 }
 
@@ -59,4 +60,4 @@ tasks {
 group = "xyz.hlafaille.espresso"
 version = "1.0-SNAPSHOT"
 description = "buildwithespresso"
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
