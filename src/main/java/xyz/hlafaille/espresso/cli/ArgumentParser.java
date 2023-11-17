@@ -2,14 +2,10 @@ package xyz.hlafaille.espresso.cli;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import xyz.hlafaille.espresso.Main;
-import xyz.hlafaille.espresso.util.LogFormatter;
+import xyz.hlafaille.espresso.util.ColorLogger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * This is a small Argument Parsing and command routing utility
@@ -27,12 +23,13 @@ public class ArgumentParser {
 
     private final CommandHandler helpCommandHandler = new CommandHandler(false) {
         @Override
-        public void execute(String input) {
+        public Integer execute(String input) {
             StringBuilder outputStringBuilder = new StringBuilder(applicationName + " - " + applicationDescription + "\n");
             for (Command command : commandHandlerMap.keySet()) {
-                outputStringBuilder.append("  %s, %s    -   %s\n".formatted(command.shortName, command.name, command.helpText));
+                outputStringBuilder.append("%s, %s    -   %s\n".formatted(command.shortName, command.name, command.helpText));
             }
-            System.out.println(outputStringBuilder);
+            getLogger().info(outputStringBuilder.toString());
+            return 0;
         }
     };
 
@@ -61,9 +58,6 @@ public class ArgumentParser {
      * When called, this method will iterate over the Command/CommandHandler map to determine which command needs to ran
      */
     public void parse(String[] args) {
-        // get a logger for this application
-        Logger logger = Logger.getLogger(Main.class.getName());
-
         // if no command was specified, call the help command handler
         if (args.length == 0) {
             helpCommandHandler.execute(null);
@@ -83,7 +77,8 @@ public class ArgumentParser {
         }
 
         // if a command wasn't found, call the help command handler
-        helpCommandHandler.execute(null);
+        Integer exitCode = helpCommandHandler.execute(null);
+        System.exit(exitCode);
     }
 
     /**
@@ -107,20 +102,17 @@ public class ArgumentParser {
     /**
      * Base command handler. This class will encapsulate the logic of a particular command.
      */
+    @Getter
     public static class CommandHandler {
-        @Getter
-        private final Logger logger = LogFormatter.getConfiguredLogger();
+        private final ColorLogger logger = ColorLogger.getInstance();
         private Boolean requireInput;
 
         public CommandHandler(Boolean requireInput) {
             this.requireInput = requireInput;
         }
 
-        public Boolean getRequireInput() {
-            return requireInput;
-        }
-
-        public void execute(String input) {
+        public Integer execute(String input) {
+            return null;
         }
     }
 }

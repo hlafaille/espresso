@@ -12,10 +12,10 @@ public class InitCommandHandler extends ArgumentParser.CommandHandler {
     }
 
     @Override
-    public void execute(String input) {
+    public Integer execute(String input) {
         if (getRequireInput() && input == null) {
-            getLogger().severe("please provide a maven style main class path (ex: com.domain.projectName.Main)");
-            return;
+            getLogger().severe("Please provide a main class path (ex: com.domain.project.Main)");
+            return null;
         }
         getLogger().info("initializing project");
         String projectName;
@@ -23,9 +23,10 @@ public class InitCommandHandler extends ArgumentParser.CommandHandler {
             projectName = ProjectInitializer.initializeProject(input);
         } catch (EspressoProjectIntegrityCompromisedException | IOException e) {
             getLogger().severe(e.getMessage());
-            return;
+            return null;
         }
         getLogger().info("'%s' initialized, happy programming :)".formatted(projectName));
+        return null;
     }
 
 }
