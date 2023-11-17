@@ -37,9 +37,6 @@ public class ArgumentParser {
     };
 
     public ArgumentParser(String applicationName, String applicationDescription) {
-        // set our log format
-        LogFormatter.configureLogger();
-
         // set the application name and description
         this.applicationName = applicationName;
         this.applicationDescription = applicationDescription;
@@ -77,7 +74,7 @@ public class ArgumentParser {
         for (Command command : commandHandlerMap.keySet()) {
             if (args[0].equals(command.name) || args[0].equals(command.shortName)) {
                 String input = null;
-                if (args.length > 2) {
+                if (args.length > 1) {
                     input = args[2];
                 }
                 commandHandlerMap.get(command).execute(input);
@@ -105,7 +102,6 @@ public class ArgumentParser {
         String name;
         String shortName;
         String helpText;
-        // Map<Command, CommandHandler> childCommandHandlerMap;
     }
 
     /**
@@ -118,6 +114,10 @@ public class ArgumentParser {
 
         public CommandHandler(Boolean requireInput) {
             this.requireInput = requireInput;
+        }
+
+        public Boolean getRequireInput() {
+            return requireInput;
         }
 
         public void execute(String input) {

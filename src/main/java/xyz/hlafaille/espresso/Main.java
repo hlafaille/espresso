@@ -27,6 +27,10 @@ public class Main {
                 new ArgumentParser.CommandHandler(true) {
                     @Override
                     public void execute(String input) {
+                        if (getRequireInput() == true && input == null) {
+                            getLogger().severe("please provide a maven style main class path (ex: com.domain.projectName.Main)");
+                            return;
+                        }
                         getLogger().info("initializing project");
                         try {
                             ProjectInitializer.initializeProject(input);

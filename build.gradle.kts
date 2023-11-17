@@ -7,6 +7,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     `java-library`
     `maven-publish`
+    id("org.graalvm.buildtools.native") version "0.9.28"
     application
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -43,6 +44,7 @@ tasks {
     }
 }
 
+
 tasks.test {
     useJUnitPlatform()
 }
@@ -52,6 +54,23 @@ tasks {
         dependsOn(shadowJar)
     }
 }
+
+
+
+graalvmNative {
+    toolchainDetection.set(true)
+    binaries {
+        named("main") {
+            imageName.set("espresso")
+            mainClass.set("xyz.hlafaille.espresso.Main")
+        }
+    }
+    binaries.all {
+        buildArgs.add("--verbose")
+    }
+}
+
+
 
 group = "xyz.hlafaille.espresso"
 version = "1.0-SNAPSHOT"
