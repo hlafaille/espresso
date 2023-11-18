@@ -4,6 +4,7 @@ package xyz.hlafaille.espresso;
 import xyz.hlafaille.espresso.cli.ArgumentParser;
 import xyz.hlafaille.espresso.cli.Command;
 import xyz.hlafaille.espresso.cli.handler.InitCommandHandler;
+import xyz.hlafaille.espresso.cli.handler.PullCommandHandler;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.project.ProjectInitializer;
 import xyz.hlafaille.espresso.project.ProjectManager;
@@ -27,6 +28,15 @@ public class Main {
                         "Establish a new Espresso project"
                 ),
                 new InitCommandHandler()
+        );
+
+        argumentParser.addCommand(
+                new Command(
+                        "pull",
+                        "p",
+                        "Pull dependencies regardless of local status"
+                ),
+                new PullCommandHandler()
         );
 
         // parse the arguments

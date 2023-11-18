@@ -2,6 +2,7 @@ package xyz.hlafaille.espresso.project;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.project.dto.EspressoProjectConfiguration;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 public class ProjectManager {
     private static ProjectManager instance;
 
+    @Getter
     private EspressoProjectConfiguration espressoProjectConfiguration;
 
     private ProjectManager() throws IOException, EspressoProjectIntegrityCompromisedException {
@@ -159,7 +161,7 @@ public class ProjectManager {
      * @param artifactName    Maven style artifact name (ex: gson)
      * @param artifactVersion Maven style artifact version (ex: 1.0.0)
      */
-    private void resolveDependency(String groupId, String artifactName, String artifactVersion) throws IOException {
+    public void pullDependency(String groupId, String artifactName, String artifactVersion) throws IOException {
         URL dependencyUrl = getMavenDependencyUrlFromSeperatedFormat(groupId, artifactName, artifactVersion);
         FileUtils.copyURLToFile(
                 dependencyUrl,
@@ -182,18 +184,5 @@ public class ProjectManager {
             });
         }
         return dependencies;
-    }
-
-    /**
-     * Resolve and pull dependencies from Maven Repository, writing them to Constants.ESPRESSO_LIBS_DIRECTORY.
-     * Ideally, this method should be used for fetching dependencies defined in Constants.ESPRESSO_CONFIGURATION
-     */
-    public void pullDependencies() throws IOException {
-        Map<String, EspressoProjectConfiguration.Group> groups = espressoProjectConfiguration.getDependencies();
-        for (String groupId : groups.keySet()) {
-            for (EspressoProjectConfiguration.Artifact artifact : groups.get(groupId).getArtifacts()) {
-                resolveDependency(groupId, artifact.getArtifactId(), artifact.getVersion());
-            }
-        }
     }
 }

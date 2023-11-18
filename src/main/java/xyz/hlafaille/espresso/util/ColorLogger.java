@@ -14,7 +14,7 @@ public class ColorLogger {
 
     public void info(String message) {
         for (String line : message.split("\n")) {
-            System.out.println(PREFIX_WHITE + "INFO" + ANSI_RESET + "   " + line + ANSI_RESET);
+            System.out.println(PREFIX_WHITE + "INFO" + ANSI_RESET + "  " + line + ANSI_RESET);
         }
     }
 
