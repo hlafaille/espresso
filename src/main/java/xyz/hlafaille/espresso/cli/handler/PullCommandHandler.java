@@ -21,9 +21,11 @@ public class PullCommandHandler extends CommandHandler {
         try {
             ProjectManager projectManager = ProjectManager.getInstance();
             Map<String, EspressoProjectConfiguration.Group> groupMap = projectManager.getEspressoProjectConfiguration().getDependencies();
-            for (String groupId : groupMap.keySet()) {
+            String groupId;
+            for (int i = 0; i < groupMap.keySet().size(); i++) {
+                groupId = groupMap.keySet().stream().toList().get(i);
                 for (EspressoProjectConfiguration.Artifact artifact : groupMap.get(groupId).getArtifacts()) {
-                    getLogger().info("... %s v%s from '%s'".formatted(artifact.getArtifactId(), artifact.getVersion(), groupId));
+                    getLogger().info("[%s/%s] %s v%s from '%s'".formatted(i+1, groupMap.keySet().size(), artifact.getArtifactId(), artifact.getVersion(), groupId));
                     projectManager.pullDependency(groupId, artifact.getArtifactId(), artifact.getVersion());
                 }
             }
@@ -31,7 +33,7 @@ public class PullCommandHandler extends CommandHandler {
             getLogger().severe(e.getMessage());
             return 1;
         }
-        getLogger().info("Dependencies pulled");
+        getLogger().info("Done!");
         return 0;
     }
 }
