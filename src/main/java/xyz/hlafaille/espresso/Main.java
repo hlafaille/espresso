@@ -4,6 +4,7 @@ package xyz.hlafaille.espresso;
 import xyz.hlafaille.espresso.cli.ArgumentParser;
 import xyz.hlafaille.espresso.cli.Command;
 import xyz.hlafaille.espresso.cli.handler.InitCommandHandler;
+import xyz.hlafaille.espresso.cli.handler.InstallCommandHandler;
 import xyz.hlafaille.espresso.cli.handler.PullCommandHandler;
 import xyz.hlafaille.espresso.exception.EspressoProjectIntegrityCompromisedException;
 import xyz.hlafaille.espresso.project.ProjectInitializer;
@@ -17,10 +18,10 @@ public class Main {
         // build our argument parser
         ArgumentParser argumentParser = new ArgumentParser(
                 "Espresso",
-                "Build with Espresso. Because Maven and Gradle don't have opinions."
+                "An opinionated build tool for Java. Because Maven and Gradle don't have opinions."
         );
 
-        // add our commands
+        // espresso initialize
         argumentParser.addCommand(
                 new Command(
                         "initialize",
@@ -30,6 +31,7 @@ public class Main {
                 new InitCommandHandler()
         );
 
+        // espresso pull
         argumentParser.addCommand(
                 new Command(
                         "pull",
@@ -37,6 +39,16 @@ public class Main {
                         "Pull dependencies regardless of local status"
                 ),
                 new PullCommandHandler()
+        );
+
+        // espresso install
+        argumentParser.addCommand(
+                new Command(
+                        "install",
+                        "i",
+                        "Install a dependency"
+                ),
+                new InstallCommandHandler()
         );
 
         // parse the arguments
