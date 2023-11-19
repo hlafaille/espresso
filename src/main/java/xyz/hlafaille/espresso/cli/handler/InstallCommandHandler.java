@@ -16,7 +16,11 @@ public class InstallCommandHandler extends CommandHandler {
 
     @Override
     public Integer execute(String input) {
-        getLogger().info("Finding '%s'".formatted(input));
+        if (input == null) {
+            getLogger().severe("Please provide a search term (ex: gson)");
+            return 1;
+        }
+        getLogger().info("Searching for artifacts mentioning '%s'".formatted(input));
         return 0;
     }
 }

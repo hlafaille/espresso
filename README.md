@@ -9,7 +9,7 @@ Currently, Espresso does not have a command line interface. I am building out cl
 * `espresso init`
   * Initialize a new project by creating the following:
     * `.espresso/`
-    * `.espresso/jars`
+    * `.espresso/libs`
     * `.espresso/espresso.json5`
 * `espresso install`
   * Search Maven Repository for dependencies through the CLI. Imagine how `flatpak install` works currently
