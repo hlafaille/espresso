@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     api("org.projectlombok:lombok:1.18.28")
-
+    implementation(files("libs/eap.jar"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("org.mockito:mockito-core:5.7.0")
     annotationProcessor("org.projectlombok:lombok:1.18.28")
